@@ -27,7 +27,7 @@ model_name = "models/vanilla/digists"
 data_path  = "../../data_img/MNIST/train/"
 
 # Step 0: Global Parameters
-epochs     = 10
+epochs     = 1
 lr_rate    = 1e-4
 batch_size = 4
 

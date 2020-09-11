@@ -22,10 +22,6 @@ Moreover, the term “variational” comes from the close relation there is betw
 <center>   
 <img src="img/vae1.png" width="500" height="300"/>   
 </center>   
-<p></p>
-<center>     
-<img src="img/vae2.png" width="500" height="300"/>   
-</center>
 
 
 ### Training on MNIST
@@ -56,6 +52,6 @@ Training & Prediction can be run as follows:
 
 Epoch | Training Loss |  Validation Loss  | True image and predicted image
 :---: | :---: | :---: | :---:
+1 | 0.0250| 0.0113 | <img src="img/vanilla1.png" />
 10 | 0.0059 | 0.0043 | <img src="img/epoch10.png" />
 20 | 0.0018 | 0.0019 | <img src="img/epoch20.png" />
-30 | 0.0014| 0.0016 | <img src="img/epoch30.png" />
