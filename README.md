@@ -20,7 +20,7 @@ Moreover, the term “variational” comes from the close relation there is betw
 
 ### The Architecrure of VAEs
 <center>   
-<img src="img/vae1.png" width="500" height="300"/>   
+<img src="img/vae.png" width="500" height="300"/>   
 </center>   
 
 

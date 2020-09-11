@@ -22,8 +22,10 @@ class VANILLA_VAE(tf.keras.Model):
 
         # Encoder Layers
         self.flatten = tf.keras.layers.Flatten()
-        self.dense1  = tf.keras.layers.Dense(units = self.latent_dim, name = "en_fc1")
-        self.en_act  = tf.keras.layers.Activation("relu", name = "en_main_out")
+
+        # Latent Space
+        self.la_dense1= tf.keras.layers.Dense(units = self.latent_dim   , name = "la_fc1")
+        self.la_dense2= tf.keras.layers.Dense(units = self.latent_dim   , name = "la_fc2")
 
         # Decoder Layers
         self.dense2  = tf.keras.layers.Dense(units = (image_size ** 2) * 3, name = "de_fc1")
@@ -36,31 +38,32 @@ class VANILLA_VAE(tf.keras.Model):
     def encoder(self, x, training = None):
         # Encoder Space
         x = self.flatten(x)
-        # Latent Space
-        x = self.dense1(x)
-        x = self.en_act(x)
         return x
 
     #................................................................................
     # Encoder Space
     #................................................................................
     def decoder(self, x, training = None):
-        # Encoder Space
+        # Decoder Space
         x = self.dense2(x)
         x = self.de_act(x)
         x = self.reshape(x)
         return x
 
     #................................................................................
-    #
+    # Latent Space
+    #................................................................................
+    def latent_space(self,x):
+        mu  = self.la_dense1(x)
+        std = self.la_dense2(x)
+        shape = mu.shape[1:]
+        eps = tf.random.normal(shape, 0.0, 1.0)
+        x = mu + eps * (tf.math.exp(std/2.0))
+        return x
+
     #................................................................................
     def call(self, inputs, training = None):
-        # inputs = self.in_layer(inputs)
-        self.encoded = self.encoder(inputs, training)
-
-        shape = self.encoded.shape[1:]
-        x = tf.random.uniform(shape, minval=0.0, maxval=1.0)
-        de_input = self.encoded + x
-
-        self.decoded = self.decoder(de_input, training)
-        return self.decoded
+        x = self.encoder(inputs, training)
+        x = self.latent_space(x)
+        x = self.decoder(x, training)
+        return x
