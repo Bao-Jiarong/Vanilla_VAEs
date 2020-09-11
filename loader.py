@@ -79,6 +79,8 @@ def load_light(dir,width,height,shuffle=True, split_ratio = 0.8, augment_data = 
     print("Loading data")
     n = len(subdirs)
     for i in range(n):
+        if ".DS_Store" in subdirs[i]:
+            continue
         filenames = os.listdir(dir+subdirs[i])
         print("class",subdirs[i],"contains",len(filenames),"images")
         for j in range(len(filenames)):

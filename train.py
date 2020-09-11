@@ -24,10 +24,10 @@ tf.random.set_seed(7)
 image_size = 28
 latent_dim = 200
 model_name = "models/vanilla/digists"
-data_path  = "../../../data/classification/MNIST/train/"
+data_path  = "../../data_img/MNIST/train/"
 
 # Step 0: Global Parameters
-epochs     = 30
+epochs     = 10
 lr_rate    = 1e-4
 batch_size = 4
 
@@ -130,4 +130,46 @@ elif sys.argv[1] == "predict":
     all_imgs = np.hstack((images[0], preds[0]))
     all_imgs = cv2.resize(all_imgs,(8*image_size,4*image_size),interpolation = cv2.INTER_AREA)
     cv2.imshow("imgs",all_imgs)
+    cv2.waitKey(0)
+
+elif sys.argv[1] == "predict_all":
+    # Step 3: Loads the weights
+    model.load_weights(model_name)
+    my_model = tf.keras.Sequential([model])
+
+    # Step 4: Prepare the input
+    imgs_filenames = ["../../data_img/MNIST/test/img_2.jpg" , # 0
+                      "../../data_img/MNIST/test/img_18.jpg", # 1
+                      "../../data_img/MNIST/test/img_1.jpg" , # 2
+                      "../../data_img/MNIST/test/img_5.jpg" , # 3
+                      "../../data_img/MNIST/test/img_13.jpg", # 4
+                      "../../data_img/MNIST/test/img_11.jpg", # 5
+                      "../../data_img/MNIST/test/img_35.jpg", # 6
+                      "../../data_img/MNIST/test/img_6.jpg" , # 7
+                      "../../data_img/MNIST/test/img_45.jpg", # 8
+                      "../../data_img/MNIST/test/img_3.jpg" ] # 9
+    images = []
+    for filename in imgs_filenames:
+        img = cv2.imread(filename)
+        image = cv2.resize(img,(image_size,image_size),interpolation = cv2.INTER_AREA)
+        images.append(image)
+
+    # True images
+    images = np.array(images)
+    images = loader.scaling_tech(images,method="normalization")
+
+    # Predicted images
+    preds = my_model.predict(images)
+    preds = (preds - preds.min())/(preds.max() - preds.min())
+
+
+    true_images = np.hstack(images)
+    pred_images = np.hstack(preds)
+
+    images = np.vstack((true_images, pred_images))
+    h = images.shape[0]
+    w = images.shape[1]
+    images = cv2.resize(images,(w << 1, h << 1))
+
+    cv2.imshow("imgs",images)
     cv2.waitKey(0)
